@@ -7,8 +7,15 @@ const app = express();
 const port = 3000;
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.set('view engine', 'ejs');
+// Routes <-- Update
+const indexRoute = require('./routes/index');
+app.use('/', indexRoute);
+// server.js (excerpt)
+const indexRoute = require('./routes/index');
+const usersRoute = require('./routes/users');
+app.use('/', indexRoute);
+app.use('/users', usersRoute);
 // MongoDB Setup
 const uri = process.env.MONGO_URI;
 const client = new MongoClient(uri);
@@ -18,10 +25,6 @@ await client.connect();
 console.log("Connected to MongoDB Atlas");
 // Select database
 const database = client.db("ecommerceDB");
-// Temporary test route
-app.get('/', (req, res) => {
-res.send("Hello, MongoDB is connected!");
-});
 // Start server
 app.listen(port, () => {
 console.log(`Server running at http://localhost:${port}`);
